@@ -1,0 +1,32 @@
+<Window x:Class="RevitAPI_AI_Plugin.MainView.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainView"
+        Height="400"
+        Width="500">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBox Grid.Row="0"
+                 Margin="0,0,0,8"
+                 Text="{Binding UserInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <Button Grid.Row="1"
+                Margin="0,0,0,8"
+                Width="100"
+                Height="28"
+                HorizontalAlignment="Left"
+                Content="Send"
+                Command="{Binding SendCommand}" />
+
+        <TextBox Grid.Row="2"
+                 IsReadOnly="True"
+                 TextWrapping="Wrap"
+                 VerticalScrollBarVisibility="Auto"
+                 Text="{Binding ChatText}" />
+    </Grid>
+</Window>
