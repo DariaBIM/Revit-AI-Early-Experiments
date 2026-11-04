@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{63238786-961E-4BCB-B233-CCF53604CEE0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RevitAPI_AI_HUB_Plugin</RootNamespace>
+    <AssemblyName>RevitAPI_AI_HUB_Plugin</AssemblyName>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="RevitAPI">
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2022\RevitAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RevitAPIUI">
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2022\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="MainView\MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainView\MainViewViewModel.cs" />
+    <Compile Include="Models\HubRequestModel.cs" />
+    <Compile Include="Models\HubResponseModel.cs" />
+    <Compile Include="Models\PluginInfoModel.cs" />
+    <Compile Include="Models\PluginMatchResultModel.cs" />
+    <Compile Include="Services\AIHubService.cs" />
+    <Compile Include="Services\PluginCatalogService.cs" />
+    <Compile Include="Services\PluginMatchService.cs" />
+    <Compile Include="Services\PluginLaunchService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MainView\MainView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="RevitAPI_AI_HUB_Plugin.addin" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Library\ZimovetsPluginLibrary.AI\ZimovetsPluginLibrary.AI\ZimovetsPluginLibrary.AI.csproj">
+      <Project>{80b43365-9dd6-4f06-86d3-5c09f887f835}</Project>
+      <Name>ZimovetsPluginLibrary.AI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Library\ZimovetsPluginLibrary\ZimovetsPluginLibrary\ZimovetsPluginLibrary\ZimovetsPluginLibrary.csproj">
+      <Project>{1e3f695c-6aa5-4b96-aba7-2649d2626051}</Project>
+      <Name>ZimovetsPluginLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>REM Очистка папки плагина от устаревших DLL (иначе остаются старые копии RevitAPI после смены Private)
+
+if exist "C:\ZimovetsRevitPlugins\01_Plugins\RevitAPI_AI_HUB_Plugin\" del /q "C:\ZimovetsRevitPlugins\01_Plugins\RevitAPI_AI_HUB_Plugin\*.*"
+
+REM Копирование всех файлов из папки TargetDir в папку назначения
+
+xcopy "$(TargetDir)\*.*" "C:\ZimovetsRevitPlugins\01_Plugins\RevitAPI_AI_HUB_Plugin\" /y /i
+
+xcopy "$(ProjectDir)$(ProjectName).addin" "C:\ZimovetsRevitPlugins\01_Plugins\RevitAPI_AI_HUB_Plugin\" /y /i
+
+
+REM Копирование .addin файла в папку Addins для Revit 2022
+
+xcopy "$(ProjectDir)$(ProjectName).addin" "%25appdata%25\Autodesk\Revit\Addins\2022\" /y /i</PostBuildEvent>
+  </PropertyGroup>
+</Project>
